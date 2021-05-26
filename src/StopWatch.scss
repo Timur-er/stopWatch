@@ -1,0 +1,33 @@
+.stopwatch {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    &__wrapper {
+        font-size: 80px;
+    }
+
+    &__buttons {
+        display: flex;
+        justify-content: space-between;
+        //width: 20%;
+        margin-top: 50px;
+
+    }
+
+    &__button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 3px;
+        font-size: 25px;
+        background-color: inherit;
+        box-shadow: 0 6px 10px -6px black;
+        transition: 0.3s ease all;
+
+        &:hover {
+            cursor: pointer;
+            box-shadow: none;
+        }
+    }
+}
+
