@@ -1,64 +1,64 @@
 import React, {useState} from 'react';
-import style from './StopWatch.scss';
 import {Observable} from "rxjs";
 import {startWith} from "rxjs/operators";
+import style from './StopWatch.scss';
 
 const StopWatch = () => {
-    let [second, setSecond] = useState(0);
-    let [minutes, setMinutes] = useState(0);
-    let [hours, setHours] = useState(0);
+    let [time, setTime] = useState(0);
     let [subscription, setSubscription] = useState();
-    let [reset, setReset] = useState(false);
-    let count = 1;
+    let [started, setStarted] = useState(false);
+    let count = 0;
 
-
+    let reset = false;
     const stopWatch$ = new Observable(observer => {
-        reset ? startWith(count) : startWith(count = second + 1)
+        startWith(reset ? count = 1 : count = time + 1);
         setInterval(() => {
-            observer.next(count++)
-        }, 1000)
+            observer.next(count++);
+        }, 1000);
     })
 
-    const observer = {next: value => setSecond(value)}
+    const observer = {next: value => setTime(value)}
 
     const startTimer = () => {
-        setReset(false);
-        setSubscription(stopWatch$.subscribe(observer))
+        if (!started) {
+            setStarted(true);
+            setSubscription(stopWatch$.subscribe(observer));
+        }
     }
 
     const stopTimer = () => {
-        setReset(false);
-        subscription.unsubscribe()
-        setSecond(0)
+        if (started) {
+            setStarted(false);
+            subscription.unsubscribe();
+            setTime(0);
+        }
     }
 
-    const waitTimer = e => {
-        if (e.detail === 2) {
-            setReset(false);
-            subscription.unsubscribe()
+    const waitTimer = () => {
+        if (started) {
+            setStarted(false);
+            subscription.unsubscribe();
         }
     }
 
     const resetTimer = () => {
-        setReset(true);
-        subscription.unsubscribe()
-        setSubscription(stopWatch$.subscribe(observer))
+        if (started) {
+            reset = true;
+            subscription.unsubscribe();
+            setSubscription(stopWatch$.subscribe(observer));
+        }
     }
 
     return (
         <div className={'stopwatch'}>
             <div className={'stopwatch__wrapper'}>
-                <span>{hours}</span>
-                <span>:</span>
-                <span>{minutes}</span>
-                <span>:</span>
-                <span>{second}</span>
+                <span>{Math.floor(time / 3600) + ' : ' + Math.floor(time / 60) + ' : ' + Math.floor(time % 60)}</span>
             </div>
 
             <div className={'stopwatch__buttons'}>
                 <button onClick={startTimer} className={'stopwatch__button'}>Start</button>
                 <button onClick={stopTimer} className={'stopwatch__button'}>Stop</button>
-                <button onClick={waitTimer} className={'stopwatch__button'}>Wait</button>
+                <button onDoubleClick={waitTimer} className={'stopwatch__button'}>Wait</button>
                 <button onClick={resetTimer} className={'stopwatch__button'}>Reset</button>
             </div>
 
