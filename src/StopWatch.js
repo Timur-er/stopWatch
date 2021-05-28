@@ -8,8 +8,8 @@ const StopWatch = () => {
     let [subscription, setSubscription] = useState();
     let [started, setStarted] = useState(false);
     let count = 0;
-
     let reset = false;
+
     const stopWatch$ = new Observable(observer => {
         startWith(reset ? count = 1 : count = time + 1);
         setInterval(() => {
@@ -52,7 +52,11 @@ const StopWatch = () => {
     return (
         <div className={'stopwatch'}>
             <div className={'stopwatch__wrapper'}>
-                <span>{Math.floor(time / 3600) + ' : ' + Math.floor(time / 60) + ' : ' + Math.floor(time % 60)}</span>
+                <span>{Math.floor(time/3600) < 10 ? `0${Math.floor(time/3600)}` : Math.floor(time/3600)}</span>
+                :
+                <span>{Math.floor((time/60)%60) < 10 ? `0${Math.floor((time/60)%60)}` : Math.floor((time/60)%60)}</span>
+                :
+                <span>{Math.floor(time%60) < 10 ? `0${Math.floor(time%60)}` : Math.floor(time%60)}</span>
             </div>
 
             <div className={'stopwatch__buttons'}>
